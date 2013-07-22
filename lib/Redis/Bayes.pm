@@ -7,7 +7,7 @@ use Moo;
 use Lingua::StopWords qw/getStopWords/;
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.021';
 
 has stopwords => (
   is => 'rw',
