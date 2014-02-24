@@ -7,7 +7,7 @@ use Moo;
 use Lingua::StopWords qw/getStopWords/;
 use strict;
 
-our $VERSION = '0.021';
+our $VERSION = '0.022';
 
 has stopwords => (
   is => 'rw',
@@ -25,6 +25,12 @@ has prefix => (
   default => sub {'bayes:'},
 );
 
+has tokenizer => (
+  is => 'rw',
+  lazy => 1,
+  builder => '_build_tokenizer',
+);
+
 sub _build_redis {
   return Redis->new(
     reconnect => 2, 
@@ -36,12 +42,20 @@ sub _build_stopwords {
   return getStopWords('en');
 }
 
+sub _build_tokenizer {
+  my $self = shift;
+  return sub {
+    my ($txt) = @_;
+    my @words = grep {
+      !$self->stopwords->{$_}
+    } grep { $_ } split /[\W_-]+/, lc $txt;
+    return @words;
+  };
+}
+
 sub _tokenize {
-  my ($self, $txt) = @_;
-  my @words = grep {
-    !$self->stopwords->{$_}
-  } grep { !/^\d+$/ && $_ } split /[\W_-]+/, lc $txt;
-  return @words;
+  my ($self,$txt) = @_;
+  return $self->tokenizer->($txt);
 }
 
 sub _word_counts {
@@ -163,6 +177,7 @@ This module is an implementation of naive Bayes on Redis.
   my $rb = Redis::Bayes->new(
     prefix => 'yourownprefixhere:',
     stopwords => {blah => 1, whatever => 1},
+    tokenizer => \&tokenize,
     redis => $redis,
   );
 
@@ -175,6 +190,10 @@ Redis database prefix. The default is 'bayes:'.
 =item B<stopwords>
 
 The set of words to filter when training. The default uses Lingua::StopWords.
+
+=item B<tokenizer>
+
+The package is equipped with its own tokenizer. But you may override this by supplying your own as a coderef either at creation or after instantiation.
 
 =item B<redis>
 
@@ -229,7 +248,7 @@ bug as I make changes.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2013 Andrew Shapiro.
+Copyright 2014 Andrew Shapiro.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
