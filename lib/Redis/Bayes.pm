@@ -7,7 +7,7 @@ use Moo;
 use Lingua::StopWords qw/getStopWords/;
 use strict;
 
-our $VERSION = '0.022';
+our $VERSION = '0.023';
 
 has stopwords => (
   is => 'rw',
@@ -152,7 +152,7 @@ sub _total {
 __END__
 =head1 NAME
 
-Redis::Bayes - stochastic Baysian classification on Redis
+Redis::Bayes - Baysian classification on Redis
 
 =head1 SYNOPSIS
 

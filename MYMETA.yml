@@ -1,0 +1,25 @@
+---
+abstract: 'stochastic Baysian classification on Redis'
+author:
+  - 'Andrew Shapiro <trski@cpan.org>'
+build_requires:
+  Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.88, CPAN::Meta::Converter version 2.132140'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Redis-Bayes
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Lingua::StopWords: 0.09
+  Moo: 1.000002
+  Redis: 1.961
+  perl: 5.01
+version: 0.022

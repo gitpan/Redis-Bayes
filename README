@@ -1,6 +1,6 @@
 Redis-Bayes
 
-Stochastic Bayesian classification on Redis.
+Bayesian classification on Redis.
 
 INSTALLATION
 
